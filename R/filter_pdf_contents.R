@@ -7,7 +7,7 @@
 #' @param reject_regex single regex to reject any files that match the regex (broaden with regex 'or' pipes '|')
 #'
 #' @return path names of the pdf documents that satisfy your regexes
-#' @examples  filter_pdf_contents(c('(?i)blue','Green'), contents)
+#' @examples  \dontrun{ filter_pdf_contents(c('(?i)blue','Green'), contents) }
 #'
 filter_pdf_contents <- function(search_regexes, pdf_contents, reject_regex = NULL) {
 
@@ -18,10 +18,10 @@ filter_pdf_contents <- function(search_regexes, pdf_contents, reject_regex = NUL
 
   for (search_regex in search_regexes) {
 
-    content_names <- pdf_contents[content_names] %>%
-      purrr::map(~stringr::str_detect(.,search_regex)) %>%
-      purrr::map(any) %>% purrr::simplify() %>%
-      purrr::keep(~.) %>% names()
+    content_names <- pdf_contents[content_names] |>
+      purrr::map(\(.) stringr::str_detect(.,search_regex)) |>
+      purrr::map(any) |> purrr::simplify() |>
+      purrr::keep(~.) |> names()
 
 
     cat(paste0('\n - regex "', search_regex, '" returned: ', length(content_names), '\n'))
@@ -30,10 +30,10 @@ filter_pdf_contents <- function(search_regexes, pdf_contents, reject_regex = NUL
 
   if(!is.null(reject_regex)) {
 
-    reject_names <- pdf_contents[content_names] %>%
-      purrr::map(~stringr::str_detect(.,reject_regex)) %>%
-      purrr::map(any) %>% purrr::simplify() %>%
-      purrr::keep(~.) %>% names()
+    reject_names <- pdf_contents[content_names] |>
+      purrr::map(~stringr::str_detect(.,reject_regex)) |>
+      purrr::map(any) |> purrr::simplify() |>
+      purrr::keep(~.) |> names()
 
     content_names <- setdiff(content_names, reject_names)
 

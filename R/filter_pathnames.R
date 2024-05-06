@@ -7,10 +7,10 @@
 #' @param reject_regex single regex string to reject any filenames that match the regex (broaden with regex 'or' pipes '|')
 #'
 #' @return path names of the pdf documents that satisfy your regexes
-#' @examples
+#' @examples \dontrun{
 #'   regexes <- c('(?i)wire', '\\.pdf')
 #'   filter_pathnames(regexes, list.files(here::here(), recursive = T))
-#'
+#'  }
 filter_pathnames <- function(search_regexes, paths, reject_regex = NULL) {
 
   cat('\nDocument pathnames searched:', length(paths), '\n')

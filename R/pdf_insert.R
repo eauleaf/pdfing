@@ -11,15 +11,18 @@
 #' @return character path to the output pdf
 #' @export
 #'
-#' @examples /dontrun {pdf_insert('folder/main_document.pdf', 'folder/insert_this.pdf', after_page = 10)}
+#' @examples \dontrun{
+#' pdf_insert('folder/main_document.pdf', 'folder/insert_this.pdf', after_page = 10)
+#' }
 pdf_insert <- function(main_pdf = '', insert_pdf = '', after_page = 0,
                        remove_main_pages = c(0), remove_inserted_pages = c(0),
                        output = NULL, password = ''){
 
+  pdf <- index <-delete <- NULL
 
-  after_page <- base::as.numeric(after_page[1])
-  remove_main_pages <- base::as.numeric(remove_main_pages)
-  remove_inserted_pages <- base::as.numeric(remove_inserted_pages)
+  after_page <- as.numeric(after_page[1])
+  remove_main_pages <- as.numeric(remove_main_pages)
+  remove_inserted_pages <- as.numeric(remove_inserted_pages)
   length_main <- pdftools::pdf_length(main_pdf)
   length_insert <- pdftools::pdf_length(insert_pdf)
 
@@ -33,19 +36,19 @@ pdf_insert <- function(main_pdf = '', insert_pdf = '', after_page = 0,
   if( after_page > length_main ) base::warning('Insertion point "after_page" ',  after_page, ' is larger than ', length_main, ' the length of your pdf. Appending insert.')
 
 
-  main_pages <- tibble(
+  main_pages <- tibble::tibble(
     index = 1:length_main
-  ) %>%
-    mutate(
+  ) |>
+    dplyr::mutate(
       delete = index %in% remove_main_pages,
       order = index)
 
   # print(main_pages)
 
-  insert_pages <- tibble(
+  insert_pages <- tibble::tibble(
     index = (1:length_insert)
-  ) %>%
-    mutate(
+  ) |>
+    dplyr::mutate(
       delete = index %in% remove_inserted_pages,
       index = index + length_main,
       order = base::seq(after_page + 0.1, after_page + 0.9, along.with = index)
@@ -53,10 +56,10 @@ pdf_insert <- function(main_pdf = '', insert_pdf = '', after_page = 0,
 
   # print(insert_pages)
 
-  reordered_pages <- bind_rows(main = main_pages, insert = insert_pages, .id = 'pdf') %>%
-    filter(delete == FALSE) %>%
-    arrange(order) %>%
-    mutate(new_index = row_number())
+  reordered_pages <- dplyr::bind_rows(main = main_pages, insert = insert_pages, .id = 'pdf') |>
+    dplyr::filter(delete == FALSE) |>
+    dplyr::arrange(order) |>
+    dplyr::mutate(new_index = dplyr::row_number())
 
   tmp <- pdftools::pdf_combine(input = c(main_pdf, insert_pdf), output = tempfile(), password = password)
 
@@ -69,7 +72,7 @@ pdf_insert <- function(main_pdf = '', insert_pdf = '', after_page = 0,
 
   file.remove(tmp)
 
-  new_index_locns <- filter(reordered_pages, pdf == 'insert' )[['new_index']]
+  new_index_locns <- dplyr::filter(reordered_pages, pdf == 'insert' )[['new_index']]
   cat(glue::glue('\nThe created pdf is {base::nrow(reordered_pages)} pages long.\n\n'))
   cat(glue::glue('\n\nNewly inserted pages are now at: {paste0(new_index_locns, collapse = ",")}\n\n'))
   cat(glue::glue('\n\nPDF save location is: \n"{path_save}"\n\n\n'))

@@ -14,7 +14,7 @@
 #' @return a list of PDF locations that satisfy the regex
 #' @export
 #'
-#' @examples search_pdf_txt(c('1099', '(?i)corrected'), here('PDF_folder'))
+#' @examples \dontrun{ search_pdf_txt(c('1099', '(?i)corrected'), here('PDF_folder')) }
 search_pdf_txt <- function(
     search_regexes = c('', ''),
     pdf_folder = here::here(),
