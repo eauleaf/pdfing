@@ -1,7 +1,7 @@
 Package: pdfing
 Type: Package
 Title: Work on PDF docs
-Version: 0.0.0.0001
+Version: 0.0.0.0002
 Authors@R: c(person(family = "Eauleaf", email = "eauleaf@gmail.com", role = c("aut", "cre")))
 Maintainer: <eauleaf@gmail.com>
 Description: Extension to functions in pdftools.
