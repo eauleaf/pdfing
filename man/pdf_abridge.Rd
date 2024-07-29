@@ -2,12 +2,12 @@
 % Please edit documentation in R/pdf_abridge.R
 \name{pdf_abridge}
 \alias{pdf_abridge}
-\title{Subset pdf pages via regular expressions}
+\title{Build a new pdf from a subset of pdf pages selected from other pdf's by regular expressions}
 \usage{
 pdf_abridge(
   pdf_path,
-  patterns = NULL,
-  exclude_pattern = NULL,
+  search_regexes = NULL,
+  reject_regex = NULL,
   save_path = NULL,
   remove_whitespace = FALSE,
   open_pdf = TRUE,
@@ -16,13 +16,30 @@ pdf_abridge(
 )
 }
 \arguments{
-\item{sleep_time}{}
+\item{pdf_path}{a path to a pdf or vector of pdf paths}
+
+\item{search_regexes}{vector of regular expressions to filter the pdf pages you're searching through}
+
+\item{reject_regex}{single regex to reject any returned pages that match}
+
+\item{save_path}{the location and name of the new pdf (if none provided, saves to a tmp directory)}
+
+\item{remove_whitespace}{remove whitespace from the returned text}
+
+\item{open_pdf}{open the new pdf after compiling document}
+
+\item{stor_txt}{questioning... creates a rds file of the text for fast successive searches}
+
+\item{sleep_time}{time to wait before compiling}
+}
+\value{
+a tibble of the pdfs and pages selected
 }
 \description{
-Subset pdf pages via regular expressions
+Build a new pdf from a subset of pdf pages selected from other pdf's by regular expressions
 }
 \examples{
 \dontrun{
-abridge_pdf(doc,patterns = c('(?i)LIMITATION OF COV.*','(?i)POLICY NUM'))
+pdf_abridge(doc,search_regexes = c('(?i)LIMITATION OF COV.*','(?i)POLICY NUM'))
 }
 }

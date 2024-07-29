@@ -1,6 +1,6 @@
 #' filter directory names by regular expressions
 #'
-#' (used/called inside search_pdf_txt)
+#' (used/called inside pdf_search_txt)
 #'
 #' @param search_regexes vector of regexes to filter down the paths you are searching
 #' @param paths character vector of directory paths

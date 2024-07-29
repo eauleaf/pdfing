@@ -17,7 +17,7 @@ filter_pdf_contents(search_regexes, pdf_contents, reject_regex = NULL)
 path names of the pdf documents that satisfy your regexes
 }
 \description{
-(used/called inside search_pdf_txt)
+(used/called inside pdf_search_txt)
 }
 \examples{
  \dontrun{ filter_pdf_contents(c('(?i)blue','Green'), contents) }

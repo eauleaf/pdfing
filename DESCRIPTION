@@ -1,7 +1,7 @@
 Package: pdfing
 Type: Package
 Title: Work on PDF docs
-Version: 0.0.0.0002
+Version: 0.0.0.0003
 Authors@R: c(person(family = "Eauleaf", email = "eauleaf@gmail.com", role = c("aut", "cre")))
 Maintainer: <eauleaf@gmail.com>
 Description: Extension to functions in pdftools.
@@ -31,10 +31,9 @@ Suggests:
     withr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
 Language: en-US
 URL: https://github.com/eauleaf/pdfing
 BugReports: https://github.com/eauleaf/pdfing/issues
 Config/testthat/parallel: true
-

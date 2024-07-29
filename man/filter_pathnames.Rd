@@ -17,7 +17,7 @@ filter_pathnames(search_regexes, paths, reject_regex = NULL)
 path names of the pdf documents that satisfy your regexes
 }
 \description{
-(used/called inside search_pdf_txt)
+(used/called inside pdf_search_txt)
 }
 \examples{
 \dontrun{

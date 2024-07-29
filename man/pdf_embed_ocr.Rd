@@ -15,7 +15,7 @@ pdf_embed_ocr(path_read, ..., path_save = NULL)
 \arguments{
 \item{path_read}{text: path to the pdf to ocr (uses here)}
 
-\item{...}{text: optional args for OCRmyPDF (https://ocrmypdf.readthedocs.io/en/latest/cookbook.html#)}
+\item{...}{text: (optional) args for OCRmyPDF (https://ocrmypdf.readthedocs.io/en/latest/cookbook.html#)}
 
 \item{path_save}{text: (optional) save location/filename.pdf (if used, argument must be specified by name)}
 }
@@ -28,6 +28,7 @@ To see all options, in terminal type: man ocrmypdf
 \examples{
 \dontrun{
 pdf_embed_ocr('/home/user/Desktop/somefile.pdf','--deskew', '--clean')
+pdf_embed_ocr('/home/user/Desktop/somefile.tif')
 list.files(pattern = '(?i)pdf$', full.names = T, recursive = T) |> #' purrr::map(
 ~pdf_embed_ocr(., '--deskew', '--rotate-pages', '--threshold', '--skip-text',
 '--redo-ocr', '--clean','-remove-background'))

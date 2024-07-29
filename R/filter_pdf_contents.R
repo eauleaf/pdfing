@@ -1,6 +1,6 @@
 #' filter pdf documents by search via regular expressions
 #'
-#' (used/called inside search_pdf_txt)
+#' (used/called inside pdf_search_txt)
 #'
 #' @param search_regexes vector of regexes to filter down the pdfs you're searching through
 #' @param pdf_contents the list of pdfs that have been read as text either by pdftools::pdf_text or ocr
@@ -46,3 +46,5 @@ filter_pdf_contents <- function(search_regexes, pdf_contents, reject_regex = NUL
   return(content_names)
 
 }
+
+

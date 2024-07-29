@@ -3,4 +3,4 @@
 export(pdf_abridge)
 export(pdf_embed_ocr)
 export(pdf_insert)
-export(search_pdf_txt)
+export(pdf_search_txt)

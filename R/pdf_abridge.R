@@ -1,27 +1,27 @@
-#' Subset pdf pages via regular expressions
+#' Build a new pdf from a subset of pdf pages selected from other pdf's by regular expressions
 #'
-#' @param pdf_path
-#' @param patterns
-#' @param exclude_pattern
-#' @param save_path
-#' @param remove_whitespace
-#' @param open_pdf
-#' @param stor_txt
-#' @param sleep_time
+#' @param pdf_path a path to a pdf or vector of pdf paths
+#' @param search_regexes vector of regular expressions to filter the pdf pages you're searching through
+#' @param reject_regex single regex to reject any returned pages that match
+#' @param save_path the location and name of the new pdf (if none provided, saves to a tmp directory)
+#' @param remove_whitespace remove whitespace from the returned text
+#' @param open_pdf open the new pdf after compiling document
+#' @param stor_txt questioning... creates a rds file of the text for fast successive searches
+#' @param sleep_time time to wait before opening compiled pdf
 #'
-#' @return
+#' @return a tibble of the pdfs and pages selected
 #' @export
 #'
 #' @examples \dontrun{
-#' abridge_pdf(doc,patterns = c('(?i)LIMITATION OF COV.*','(?i)POLICY NUM'))
+#' pdf_abridge(doc,search_regexes = c('(?i)LIMITATION OF COV.*','(?i)POLICY NUM'))
 #' }
 pdf_abridge <- function(pdf_path,
-                        patterns = NULL,
-                        exclude_pattern = NULL,
+                        search_regexes = NULL,
+                        reject_regex = NULL,
                         save_path = NULL,
                         remove_whitespace = FALSE,
                         open_pdf = TRUE,
-                        stor_txt = TRUE,
+                        stor_txt = FALSE,
                         sleep_time = 1
 ){
 
@@ -56,17 +56,17 @@ pdf_abridge <- function(pdf_path,
   remaining_pages <- 1:length(txt)
 
   # exclude pages -----------------------------------------------------------
-  if(!is.null(exclude_pattern)){
+  if(!is.null(reject_regex)){
 
     rejected_pages <- txt[remaining_pages] |>
-      purrr::map(\(.) stringr::str_detect(.,exclude_pattern)) |>
+      purrr::map(\(.) stringr::str_detect(.,reject_regex)) |>
       purrr::map(any) |>
       purrr::simplify() |>
       which()
 
     remaining_pages <- setdiff(remaining_pages, rejected_pages)
 
-    cat(paste0('\n Excluded ', length(rejected_pages),' from exlusion regex: "', exclude_pattern, '"\n'))
+    cat(paste0('\n Excluded ', length(rejected_pages),' from exlusion regex: "', reject_regex, '"\n'))
 
   }
 
@@ -75,9 +75,9 @@ pdf_abridge <- function(pdf_path,
 
   # subset by regular expressions -------------------------------------------
 
-  for(pattern in patterns){
+  for(pattern in search_regexes){
 
-    cat('\n Pattern: ' ,pattern)
+    cat('\n Pattern: ' ,pattern, '\n')
 
     search_results <- txt[remaining_pages] |>
       purrr::map(\(.) stringr::str_extract(., pattern)) |>
@@ -85,15 +85,15 @@ pdf_abridge <- function(pdf_path,
       purrr::map(\(.) purrr::discard(.,is.na)) |>
       purrr::compact() |>
       purrr::map(\(.) .[1]) |>
-      purrr::list_simplify() |>
+      purrr::simplify() |>
       as.data.frame() |>
-      tibble::rownames_to_column() |>
-      tibble::tibble()
+      tibble::rownames_to_column()
 
     cat('\n Results:  ')
     if( nrow(search_results) > 0 ){
 
-      search_results <- rlang::set_names(search_results, c('page_number','line_text'))
+      search_results <- search_results |> tibble::tibble() |>
+        rlang::set_names(c('page_number','line_text'))
       remaining_pages <- search_results |> dplyr::pull(1) |> as.numeric()
       if(remove_whitespace){ search_results <- dplyr::mutate(search_results, line_text = stringr::str_squish(line_text)) }
       print(search_results)
