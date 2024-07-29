@@ -48,3 +48,22 @@ filter_pdf_contents <- function(search_regexes, pdf_contents, reject_regex = NUL
 }
 
 
+# -------------------------------------------------------------
+# helper functions used in pdf_search_txt()
+
+# pdf_contents <- readr::read_rds("/MAIN/Backup Docs/pdf_search_txt.rds")
+# pages that match a regex (internal function to which_pages_match_regexes)
+which_pages_match <- function(a_pdf, regex = 'hi'){
+  a_pdf |> purrr::map_lgl(\(.) stringr::str_detect(.,regex)) |> which()
+}
+
+# union of various regex search results (parent function of which_pages_match)
+which_pages_match_regexes <- function(a_pdf, search_regexes = c('hi','bye')){
+  search_regexes |> purrr::map(\(.) which_pages_match(a_pdf, .)) |> purrr::reduce(union)
+}
+
+
+# select lines with the text --------------------------------------------------
+# purrr::map(~str_extract_all(.,paste0('.*',regexes,'.*'))) |> purrr::map(simplify) |> purrr::map(trimws)
+detect_lines <- function(pdf_txt, regex = "hi") purrr::map(pdf_txt, \(.)stringr::str_detect(.,pattern = regex))
+
